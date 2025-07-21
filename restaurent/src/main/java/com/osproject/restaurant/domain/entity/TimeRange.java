@@ -1,6 +1,5 @@
 package com.osproject.restaurant.domain.entity;
 
-
 import lombok.*;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
@@ -10,17 +9,11 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class User {
+public class TimeRange {
 
     @Field(type = FieldType.Keyword)
-    private String id;
-
-    @Field(type = FieldType.Text)
-    private String username;
-
-    @Field(type = FieldType.Text)
-    private String givenName;
-
-    @Field(type = FieldType.Text)
-    private String familyName;
+    private String openTime;
+    
+    @Field(type = FieldType.Keyword)
+    private String closeTime;
 }
