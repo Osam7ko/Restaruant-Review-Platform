@@ -45,6 +45,7 @@ public class RestaurantServiceImpl implements RestaurantService {
                 .contactInformation(request.getContactInformation())
                 .geoLocation(geoPoint)
                 .operatingHours(request.getOperatingHours())
+                .address(request.getAddress())
                 .averageRating(0f)
                 .photos(photos)
                 .build();
@@ -113,6 +114,11 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     public void deleteRestaurant(String id) {
         restaurantRepository.deleteById(id);
+    }
+
+    @Override
+    public void deleteAll() {
+        restaurantRepository.deleteAll();
     }
 
 

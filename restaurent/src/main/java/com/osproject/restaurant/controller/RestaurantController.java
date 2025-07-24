@@ -1,6 +1,7 @@
 package com.osproject.restaurant.controller;
 
 import com.osproject.restaurant.domain.RestaurantCreateUpdateRequest;
+import com.osproject.restaurant.domain.dto.PageResponse;
 import com.osproject.restaurant.domain.dto.RestaurantCreateUpdateRequestDto;
 import com.osproject.restaurant.domain.dto.RestaurantDto;
 import com.osproject.restaurant.domain.dto.RestaurantSummaryDto;
@@ -35,7 +36,7 @@ public class RestaurantController {
     }
 
     @GetMapping
-    public Page<RestaurantSummaryDto> searchRestaurants(
+    public PageResponse<RestaurantSummaryDto> searchRestaurants(
             @RequestParam(required = false) String q,
             @RequestParam(required = false) Float minRating,
             @RequestParam(required = false) Float latitude,
@@ -43,6 +44,7 @@ public class RestaurantController {
             @RequestParam(required = false) Float radius,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "20") int size) {
+
         Page<RestaurantEntity> searchResult = restaurantService.searchRestaurants(
                 q,
                 minRating,
@@ -51,7 +53,9 @@ public class RestaurantController {
                 radius,
                 PageRequest.of(page - 1, size)
         );
-        return searchResult.map(restaurantMapper::toSummaryDto);
+
+        Page<RestaurantSummaryDto> dtoPage = searchResult.map(restaurantMapper::toSummaryDto);
+        return new PageResponse<>(dtoPage);
     }
 
     @GetMapping("/{restaurantId}")
@@ -75,6 +79,12 @@ public class RestaurantController {
     @DeleteMapping("/{restaurantId}")
     public ResponseEntity<Void> deleteRestaurant(@PathVariable String restaurantId) {
         restaurantService.deleteRestaurant(restaurantId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/all")
+    public ResponseEntity<Void> deleteAllRestaurants() {
+        restaurantService.deleteAll();
         return ResponseEntity.noContent().build();
     }
 

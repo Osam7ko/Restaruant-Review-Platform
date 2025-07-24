@@ -7,13 +7,12 @@ import com.osproject.restaurant.services.PhotoServices;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
-@RestController("/api/photos")
+@RequestMapping("/api/photos")
 public class PhotoController {
 
     private final PhotoServices photoServices;

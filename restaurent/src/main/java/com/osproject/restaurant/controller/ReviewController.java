@@ -1,6 +1,7 @@
 package com.osproject.restaurant.controller;
 
 import com.osproject.restaurant.domain.ReviewCreateUpdateRequest;
+import com.osproject.restaurant.domain.dto.PageResponse;
 import com.osproject.restaurant.domain.dto.ReviewCreateUpdateRequestDto;
 import com.osproject.restaurant.domain.dto.ReviewDto;
 import com.osproject.restaurant.domain.entity.ReviewEntity;
@@ -52,13 +53,14 @@ public class ReviewController {
     }
 
     @GetMapping
-    public Page<ReviewDto> listReviews(
+    public PageResponse<ReviewDto> listReviews(
             @PathVariable String restaurantId,
             @PageableDefault(size = 20, page = 0, sort = "datePosted", direction = Sort.Direction.DESC)
             Pageable pageable) {
-        return reviewService
-                .getRestaurantReviews(restaurantId, pageable)
-                .map(reviewMapper::toDto);
+
+        Page<ReviewEntity> page = reviewService.getRestaurantReviews(restaurantId, pageable);
+        Page<ReviewDto> dtoPage = page.map(reviewMapper::toDto);
+        return new PageResponse<>(dtoPage);
     }
 
     @GetMapping("/{reviewId}")

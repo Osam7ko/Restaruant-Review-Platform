@@ -26,4 +26,6 @@ public interface RestaurantService {
     RestaurantEntity updateRestaurant(String id, RestaurantCreateUpdateRequest restaurant);
 
     void deleteRestaurant(String id);
+
+    void deleteAll();
 }
