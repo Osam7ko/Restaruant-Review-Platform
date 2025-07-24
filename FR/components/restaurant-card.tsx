@@ -6,6 +6,7 @@ import { Star, Heart, Share2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { RestaurantSummary } from "@/domain/domain";
 import { useLanguage } from "@/providers/language-provider";
+import { getPhotoUrl } from "@/lib/api-utils";
 
 interface RestaurantCardProps {
   restaurant: RestaurantSummary;
@@ -17,7 +18,7 @@ const getImage = (restaurant: RestaurantSummary) => {
     null != restaurant.photos[0] &&
     null != restaurant.photos[0].url
   ) {
-    return `/api/photos/${restaurant.photos[0].url}`;
+    return getPhotoUrl(restaurant.photos[0].url);
   } else {
     return null;
   }

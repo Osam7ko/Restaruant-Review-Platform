@@ -1,0 +1,20 @@
+version: '3'
+services:
+  frontend:
+    build: .
+    image: my-frontend:latest
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_KEYCLOAK_URL=https://restaurant.oalqefary.com:9090
+      - NEXT_PUBLIC_KEYCLOAK_REALM=restaurant-review
+      - NEXT_PUBLIC_KEYCLOAK_CLIENT_ID=restaurant-review
+      - NEXT_PUBLIC_API_URL=https://restaurant.oalqefary.com:8080/api
+      - NEXT_PUBLIC_BASE_URL=https://restaurant.oalqefary.com
+    networks:
+      - elastic
+networks:
+  elastic:
+    driver: bridge
+

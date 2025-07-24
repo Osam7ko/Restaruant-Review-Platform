@@ -37,6 +37,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { getPhotoUrl } from "@/lib/api-utils";
 
 export default function RestaurantPage({ params }: { params: { id: string } }) {
   const { apiService } = useAppContext();
@@ -121,7 +122,7 @@ export default function RestaurantPage({ params }: { params: { id: string } }) {
       restaurant.photos.length > 0 &&
       null != restaurant.photos[0].url
     ) {
-      return `/api/photos/${restaurant.photos[0].url}`;
+      return getPhotoUrl(restaurant.photos[0].url);
     }
     return null;
   };
@@ -247,7 +248,7 @@ export default function RestaurantPage({ params }: { params: { id: string } }) {
                   <Star
                     key={i}
                     className={`w-5 h-5 ${
-                      i < restaurant.averageRating
+                      i < (restaurant.averageRating || 0)
                         ? "text-yellow-400 fill-yellow-400"
                         : "text-gray-300"
                     }`}
@@ -374,7 +375,7 @@ export default function RestaurantPage({ params }: { params: { id: string } }) {
                           className="relative aspect-square"
                         >
                           <Image
-                            src={`/api/photos/${photo.url}`}
+                            src={getPhotoUrl(photo.url)}
                             alt={photo.caption || "Review photo"}
                             fill
                             className="object-cover rounded-lg"

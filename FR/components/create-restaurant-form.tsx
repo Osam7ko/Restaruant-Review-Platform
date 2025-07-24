@@ -9,6 +9,7 @@ import Image from "next/image";
 import { Photo } from "@/domain/domain";
 import { Trash2 } from "lucide-react";
 import { useLanguage } from "@/providers/language-provider";
+import { getPhotoUrl } from "@/lib/api-utils";
 
 const daysOfWeek = [
   "monday",
@@ -42,7 +43,7 @@ export default function RestaurantForm({
     if (existingPhotoIds.length > 0) {
       // Convert photo IDs to full URLs
       const existingPreviews = existingPhotoIds.map(
-        (photoId: string) => `/api/photos/${photoId}`,
+        (photoId: string) => getPhotoUrl(photoId),
       );
       setPreviews(existingPreviews);
     }

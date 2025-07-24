@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useAppContext } from "@/providers/app-context-provider";
 import { useAuth } from "react-oidc-context";
+import { getPhotoUrl } from "@/lib/api-utils";
 
 export default function ImageUploadTestPage() {
   const { apiService } = useAppContext();
@@ -16,13 +17,13 @@ export default function ImageUploadTestPage() {
     isLoading: isAuthLoading,
   } = useAuth();
 
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [response, setResponse] = useState(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [response, setResponse] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<any>(null);
   const [filename, setFilename] = useState("");
-  const [retrievedImage, setRetrievedImage] = useState(null);
-  const [retrieveError, setRetrieveError] = useState(null);
+  const [retrievedImage, setRetrievedImage] = useState<string | null>(null);
+  const [retrieveError, setRetrieveError] = useState<string | null>(null);
 
   useEffect(() => {
     const doUseEffect = async () => {
@@ -34,9 +35,9 @@ export default function ImageUploadTestPage() {
     doUseEffect();
   }, [isAuthenticated, isAuthLoading, signinRedirect]);
 
-  const handleFileSelect = (e) => {
-    const file = e.target.files[0];
-    setSelectedFile(file);
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    setSelectedFile(file || null);
     setResponse(null);
     setError(null);
   };
@@ -68,7 +69,7 @@ export default function ImageUploadTestPage() {
         timing: `${(endTime - startTime).toFixed(2)}ms`,
         data: photo,
       });
-    } catch (err) {
+    } catch (err: any) {
       console.error("Upload failed:", err);
       setError({
         status: err.status || 500,
@@ -87,7 +88,7 @@ export default function ImageUploadTestPage() {
     setRetrieveError(null);
 
     try {
-      const response = await fetch(`/api/photos/${filename}`);
+      const response = await fetch(getPhotoUrl(filename));
 
       if (!response.ok) {
         throw new Error(`Failed to retrieve photo: ${response.statusText}`);
@@ -96,7 +97,7 @@ export default function ImageUploadTestPage() {
       const imageBlob = await response.blob();
       const imageUrl = URL.createObjectURL(imageBlob);
       setRetrievedImage(imageUrl);
-    } catch (err) {
+    } catch (err: any) {
       setRetrieveError(err.message);
     }
   };

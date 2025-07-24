@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/card";
 import { useAppContext } from "@/providers/app-context-provider";
 import { Photo } from "@/domain/domain";
+import { getPhotoUrl } from "@/lib/api-utils";
 
 export default function WriteReviewPage({
   params,
@@ -52,7 +53,7 @@ export default function WriteReviewPage({
             if (review.photos) {
               setExistingPhotos(review.photos);
               setPreviews(
-                review.photos.map((photo) => `/api/photos/${photo.url}`),
+                review.photos.map((photo) => getPhotoUrl(photo.url)),
               );
             }
           }

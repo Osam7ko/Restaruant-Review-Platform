@@ -46,8 +46,7 @@ export default function Home() {
 
       console.log(`Searching for Restaurants: ${JSON.stringify(params)}`);
       if (!apiService?.searchRestaurants) {
-        throw t('errors.apiNotAvailable');
-        return;
+        throw new Error(t('errors.apiNotAvailable'));
       }
       const restaurants = await apiService.searchRestaurants(paginatedParams);
 
