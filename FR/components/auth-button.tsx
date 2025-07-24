@@ -10,9 +10,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "react-oidc-context";
+import { useLanguage } from "@/providers/language-provider";
 
 export default function AuthButton() {
   const { signinRedirect, signoutRedirect, isAuthenticated } = useAuth();
+  const { t } = useLanguage();
 
   const handleLogin = async () => {
     try {
@@ -44,13 +46,13 @@ export default function AuthButton() {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem asChild>
-            <Link href="/restaurants/create">Add Restaurant</Link>
+            <Link href="/restaurants/create">{t('header.addRestaurant')}</Link>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
+          <DropdownMenuItem onClick={handleLogout}>{t('common.logout')}</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     );
   }
 
-  return <Button onClick={handleLogin}>Login</Button>;
+  return <Button onClick={handleLogin}>{t('common.login')}</Button>;
 }

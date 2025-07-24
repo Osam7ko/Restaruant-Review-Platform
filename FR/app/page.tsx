@@ -6,6 +6,7 @@ import Hero from "@/components/hero";
 import { useEffect, useState } from "react";
 import { RestaurantSearchParams, RestaurantSummary } from "@/domain/domain";
 import { useAppContext } from "@/providers/app-context-provider";
+import { useLanguage } from "@/providers/language-provider";
 import {
   Pagination,
   PaginationContent,
@@ -18,6 +19,7 @@ import {
 
 export default function Home() {
   const { apiService } = useAppContext();
+  const { t } = useLanguage();
 
   const [loading, setLoading] = useState(true);
   const [restaurants, setRestaurants] = useState<RestaurantSummary[]>([]);
@@ -44,7 +46,7 @@ export default function Home() {
 
       console.log(`Searching for Restaurants: ${JSON.stringify(params)}`);
       if (!apiService?.searchRestaurants) {
-        throw "ApiService is not initialized!";
+        throw t('errors.apiNotAvailable');
         return;
       }
       const restaurants = await apiService.searchRestaurants(paginatedParams);

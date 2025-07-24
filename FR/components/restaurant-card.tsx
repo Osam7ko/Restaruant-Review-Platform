@@ -1,8 +1,11 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { Star, Heart, Share2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { RestaurantSummary } from "@/domain/domain";
+import { useLanguage } from "@/providers/language-provider";
 
 interface RestaurantCardProps {
   restaurant: RestaurantSummary;
@@ -21,6 +24,8 @@ const getImage = (restaurant: RestaurantSummary) => {
 };
 
 export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
+  const { t } = useLanguage();
+
   return (
     <Link href={`/restaurants/${restaurant.id}`}>
       <Card className="overflow-hidden hover:shadow-lg transition-shadow">
@@ -62,7 +67,7 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
           </div>
           <p className="text-sm text-muted-foreground mb-4">
             {/* {restaurant.latestReview?.content} */}
-            {restaurant.cuisineType} Cuisine
+            {restaurant.cuisineType} {t('restaurant.cuisine')}
           </p>
           <div className="flex justify-between border-t pt-4">
             <button className="flex items-center gap-1 text-muted-foreground hover:text-primary">

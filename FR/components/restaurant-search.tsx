@@ -5,6 +5,7 @@ import { Search, Star } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { RestaurantSearchParams } from "@/domain/domain";
+import { useLanguage } from "@/providers/language-provider";
 
 interface RestaurantSearchProps {
   searchRestaurants: (params: RestaurantSearchParams) => Promise<void>;
@@ -12,6 +13,7 @@ interface RestaurantSearchProps {
 
 export default function RestaurantSearch(props: RestaurantSearchProps) {
   const { searchRestaurants } = props;
+  const { t } = useLanguage();
 
   const [query, setQuery] = useState("");
   const [minRating, setMinRating] = useState<number | undefined>(undefined);
@@ -63,13 +65,13 @@ export default function RestaurantSearch(props: RestaurantSearchProps) {
       <form onSubmit={handleSearchFormSubmit} className="flex gap-2 mb-4">
         <Input
           type="text"
-          placeholder="Search for restaurants..."
+          placeholder={t('search.placeholder')}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="flex-grow"
         />
         <Button type="submit">
-          <Search className="mr-2 h-4 w-4" /> Search
+          <Search className="mr-2 h-4 w-4" /> {t('search.button')}
         </Button>
       </form>
       <div className="flex mb-8 gap-2">
@@ -77,21 +79,21 @@ export default function RestaurantSearch(props: RestaurantSearchProps) {
           onClick={() => handleMinRatingFilter(2)}
           variant={minRating === 2 ? "default" : "outline"}
         >
-          <Star /> 2+
+          <Star /> {t('rating.filters.2plus')}
         </Button>
 
         <Button
           onClick={() => handleMinRatingFilter(3)}
           variant={minRating === 3 ? "default" : "outline"}
         >
-          <Star /> 3+
+          <Star /> {t('rating.filters.3plus')}
         </Button>
 
         <Button
           onClick={() => handleMinRatingFilter(4)}
           variant={minRating === 4 ? "default" : "outline"}
         >
-          <Star /> 4+
+          <Star /> {t('rating.filters.4plus')}
         </Button>
       </div>
     </div>

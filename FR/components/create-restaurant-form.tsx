@@ -1,3 +1,5 @@
+"use client";
+
 import { useFormContext } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -6,6 +8,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Photo } from "@/domain/domain";
 import { Trash2 } from "lucide-react";
+import { useLanguage } from "@/providers/language-provider";
 
 const daysOfWeek = [
   "monday",
@@ -20,14 +23,17 @@ const daysOfWeek = [
 interface RestaurantFormProps {
   uploadPhoto: (file: File, caption?: string) => Promise<Photo>;
   error?: string;
+  isUpdate?: boolean;
 }
 
 export default function RestaurantForm({
   uploadPhoto,
   error,
+  isUpdate = false,
 }: RestaurantFormProps) {
   const methods = useFormContext();
   const { register, setValue } = methods;
+  const { t } = useLanguage();
   const [previews, setPreviews] = useState<string[]>([]);
 
   // Add this useEffect to load existing photos on component mount
@@ -68,14 +74,14 @@ export default function RestaurantForm({
   const handleRemovePhoto = (indexToRemove: number) => {
     // Update previews
     const updatedPreviews = previews.filter(
-      (_, index) => index !== indexToRemove,
+      (_: string, index: number) => index !== indexToRemove,
     );
     setPreviews(updatedPreviews);
 
     // Update form value
     const existingPhotoIds = methods.getValues("photos") || [];
     const updatedPhotoIds = existingPhotoIds.filter(
-      (_, index) => index !== indexToRemove,
+      (_: string, index: number) => index !== indexToRemove,
     );
     setValue("photos", updatedPhotoIds);
 
@@ -89,21 +95,21 @@ export default function RestaurantForm({
     <div className="space-y-8">
       {/* Basic Info Section */}
       <div>
-        <h2 className="text-xl font-semibold mb-4">Basic Information</h2>
+        <h2 className="text-xl font-semibold mb-4">{t('restaurantForm.sections.basicInfo')}</h2>
         <div className="space-y-4">
           <div>
-            <Label htmlFor="name">Restaurant Name</Label>
+            <Label htmlFor="name">{t('restaurantForm.fields.name')}</Label>
             <Input id="name" {...register("name", { required: true })} />
           </div>
           <div>
-            <Label htmlFor="cuisineType">Cuisine Type</Label>
+            <Label htmlFor="cuisineType">{t('restaurantForm.fields.cuisineType')}</Label>
             <Input
               id="cuisineType"
               {...register("cuisineType", { required: true })}
             />
           </div>
           <div>
-            <Label htmlFor="contactInformation">Contact Information</Label>
+            <Label htmlFor="contactInformation">{t('restaurantForm.fields.contactInformation')}</Label>
             <Input
               id="contactInformation"
               {...register("contactInformation", { required: true })}
@@ -114,49 +120,49 @@ export default function RestaurantForm({
 
       {/* Address Section */}
       <div>
-        <h2 className="text-xl font-semibold mb-4">Address</h2>
+        <h2 className="text-xl font-semibold mb-4">{t('restaurantForm.sections.address')}</h2>
         <div className="space-y-4">
           <div>
-            <Label htmlFor="streetNumber">Street Number</Label>
+            <Label htmlFor="streetNumber">{t('restaurantForm.fields.streetNumber')}</Label>
             <Input
               id="streetNumber"
               {...register("address.streetNumber", { required: true })}
             />
           </div>
           <div>
-            <Label htmlFor="streetName">Street Name</Label>
+            <Label htmlFor="streetName">{t('restaurantForm.fields.streetName')}</Label>
             <Input
               id="streetName"
               {...register("address.streetName", { required: true })}
             />
           </div>
           <div>
-            <Label htmlFor="unit">Unit (Optional)</Label>
+            <Label htmlFor="unit">{t('restaurantForm.fields.unit')}</Label>
             <Input id="unit" {...register("address.unit")} />
           </div>
           <div>
-            <Label htmlFor="city">City</Label>
+            <Label htmlFor="city">{t('restaurantForm.fields.city')}</Label>
             <Input
               id="city"
               {...register("address.city", { required: true })}
             />
           </div>
           <div>
-            <Label htmlFor="state">State</Label>
+            <Label htmlFor="state">{t('restaurantForm.fields.state')}</Label>
             <Input
               id="state"
               {...register("address.state", { required: true })}
             />
           </div>
           <div>
-            <Label htmlFor="postalCode">Postal Code</Label>
+            <Label htmlFor="postalCode">{t('restaurantForm.fields.postalCode')}</Label>
             <Input
               id="postalCode"
               {...register("address.postalCode", { required: true })}
             />
           </div>
           <div>
-            <Label htmlFor="country">Country</Label>
+            <Label htmlFor="country">{t('restaurantForm.fields.country')}</Label>
             <Input
               id="country"
               {...register("address.country", { required: true })}
@@ -167,11 +173,11 @@ export default function RestaurantForm({
 
       {/* Operating Hours Section */}
       <div>
-        <h2 className="text-xl font-semibold mb-4">Operating Hours</h2>
+        <h2 className="text-xl font-semibold mb-4">{t('restaurantForm.sections.operatingHours')}</h2>
         <div className="space-y-4">
           {daysOfWeek.map((day) => (
             <div key={day} className="flex items-center space-x-4">
-              <Label className="w-24 capitalize">{day}</Label>
+              <Label className="w-24 capitalize">{t(`restaurantForm.days.${day}`)}</Label>
               <div className="flex-1 space-x-2">
                 <Input
                   type="time"
@@ -192,7 +198,7 @@ export default function RestaurantForm({
                         `operatingHours.${day}`,
                       );
                       if (!currentValues || !currentValues.closeTime) {
-                        setValue(`operatingHours.${day}`, null);
+                        setValue(`operatingHours.${day}`, undefined);
                       } else {
                         setValue(`operatingHours.${day}`, {
                           openTime: "",
@@ -206,7 +212,7 @@ export default function RestaurantForm({
                   }
                 />
 
-                <span>to</span>
+                <span>{t('restaurantForm.time.to')}</span>
 
                 <Input
                   type="time"
@@ -227,7 +233,7 @@ export default function RestaurantForm({
                         `operatingHours.${day}`,
                       );
                       if (!currentValues || !currentValues.openTime) {
-                        setValue(`operatingHours.${day}`, null);
+                        setValue(`operatingHours.${day}`, undefined);
                       } else {
                         setValue(`operatingHours.${day}`, {
                           openTime: currentValues.openTime,
@@ -248,10 +254,10 @@ export default function RestaurantForm({
 
       {/* Photos Section */}
       <div>
-        <h2 className="text-xl font-semibold mb-4">Restaurant Photos</h2>
+        <h2 className="text-xl font-semibold mb-4">{t('restaurantForm.sections.photos')}</h2>
         <div className="space-y-4">
           <div>
-            <Label htmlFor="photos">Upload Restaurant Photos</Label>
+            <Label htmlFor="photos">{t('restaurantForm.fields.photos')}</Label>
             <Input
               id="photos"
               type="file"
@@ -265,7 +271,7 @@ export default function RestaurantForm({
               variant="outline"
               onClick={() => document.getElementById("photos")?.click()}
             >
-              Select Photos
+              {t('restaurantForm.photos.select')}
             </Button>
           </div>
           {previews.length > 0 && (
@@ -296,11 +302,11 @@ export default function RestaurantForm({
         </div>
       </div>
 
-      {error && <p>Error: {error}</p>}
+      {error && <p>{t('common.error')}: {error}</p>}
 
       {/* Submit Button */}
       <Button type="submit" className="w-full">
-        Submit Restaurant
+        {isUpdate ? t('restaurantForm.update.submit') : t('restaurantForm.create.submit')}
       </Button>
     </div>
   );

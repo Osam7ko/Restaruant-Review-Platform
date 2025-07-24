@@ -3,6 +3,7 @@
 import RestaurantCard from "@/components/restaurant-card";
 import { RestaurantSummary } from "@/domain/domain";
 import { Donut } from "lucide-react";
+import { useLanguage } from "@/providers/language-provider";
 
 interface RestaurantListProps {
   loading: boolean;
@@ -11,9 +12,10 @@ interface RestaurantListProps {
 
 export default function RestaurantList(props: RestaurantListProps) {
   const { loading, restaurants } = props;
+  const { t } = useLanguage();
 
   if (loading) {
-    return <div>Loading restaurants...</div>;
+    return <div>{t('loading.restaurants')}</div>;
   }
 
   if (restaurants.length == 0) {
@@ -24,7 +26,7 @@ export default function RestaurantList(props: RestaurantListProps) {
             <Donut size={100} className="opacity-[0.1]" />
           </div>
 
-          <h3 className="mt-4 opacity-[0.3]">No Restaurants Available</h3>
+          <h3 className="mt-4 opacity-[0.3]">{t('search.noResults')}</h3>
         </div>
       </div>
     );

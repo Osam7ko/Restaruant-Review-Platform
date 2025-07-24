@@ -1,4 +1,10 @@
+"use client";
+
+import { useLanguage } from "@/providers/language-provider";
+
 export default function Hero() {
+  const { t } = useLanguage();
+
   return (
     <div className="relative h-[400px] mb-8">
       <div className="absolute inset-0">
@@ -11,11 +17,10 @@ export default function Hero() {
       </div>
       <div className="relative max-w-[1200px] mx-auto h-full flex flex-col justify-center px-4">
         <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-          Discover Your Next Favorite Restaurant
+          {t('hero.title')}
         </h1>
         <p className="text-lg md:text-xl text-white/90 max-w-[600px]">
-          Read authentic reviews from real diners and find the perfect spot for
-          your next meal.
+          {t('hero.subtitle')}
         </p>
       </div>
     </div>

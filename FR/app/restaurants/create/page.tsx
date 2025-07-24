@@ -3,6 +3,7 @@
 import { useForm, FormProvider } from "react-hook-form";
 import { Card, CardContent } from "@/components/ui/card";
 import { useAppContext } from "@/providers/app-context-provider";
+import { useLanguage } from "@/providers/language-provider";
 import { CreateRestaurantRequest, Photo } from "@/domain/domain";
 import CreateRestaurantForm from "@/components/create-restaurant-form";
 import { useState } from "react";
@@ -22,19 +23,20 @@ type FormData = {
     country: string;
   };
   operatingHours: {
-    monday: { openTime: string; closeTime: string } | null;
-    tuesday: { openTime: string; closeTime: string } | null;
-    wednesday: { openTime: string; closeTime: string } | null;
-    thursday: { openTime: string; closeTime: string } | null;
-    friday: { openTime: string; closeTime: string } | null;
-    saturday: { openTime: string; closeTime: string } | null;
-    sunday: { openTime: string; closeTime: string } | null;
+    monday: { openTime: string; closeTime: string } | undefined;
+    tuesday: { openTime: string; closeTime: string } | undefined;
+    wednesday: { openTime: string; closeTime: string } | undefined;
+    thursday: { openTime: string; closeTime: string } | undefined;
+    friday: { openTime: string; closeTime: string } | undefined;
+    saturday: { openTime: string; closeTime: string } | undefined;
+    sunday: { openTime: string; closeTime: string } | undefined;
   };
   photos: string[];
 };
 
 export default function CreateRestaurantPage() {
   const { apiService } = useAppContext();
+  const { t } = useLanguage();
   const [error, setError] = useState<string | undefined>();
 
   const methods = useForm<FormData>({
@@ -52,13 +54,13 @@ export default function CreateRestaurantPage() {
         country: "",
       },
       operatingHours: {
-        monday: null,
-        tuesday: null,
-        wednesday: null,
-        thursday: null,
-        friday: null,
-        saturday: null,
-        sunday: null,
+        monday: undefined,
+        tuesday: undefined,
+        wednesday: undefined,
+        thursday: undefined,
+        friday: undefined,
+        saturday: undefined,
+        sunday: undefined,
       },
       photos: [],
     },
@@ -66,7 +68,7 @@ export default function CreateRestaurantPage() {
 
   const uploadPhoto = async (file: File, caption?: string): Promise<Photo> => {
     if (null == apiService) {
-      throw Error("API Service not available!");
+      throw Error(t('errors.apiNotAvailable'));
     }
     return apiService.uploadPhoto(file, caption);
   };
@@ -85,7 +87,7 @@ export default function CreateRestaurantPage() {
       };
 
       if (null == apiService) {
-        throw Error("API Service not available!");
+        throw Error(t('errors.apiNotAvailable'));
       }
 
       setError(undefined);
@@ -104,14 +106,14 @@ export default function CreateRestaurantPage() {
         }
       } else {
         // Handle non-Axios errors
-        setError(error);
+        setError(String(err));
       }
     }
   };
 
   return (
     <div className="max-w-[800px] mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Create a New Restaurant</h1>
+      <h1 className="text-3xl font-bold mb-6">{t('restaurantForm.create.title')}</h1>
       <Card>
         <CardContent className="pt-6">
           <FormProvider {...methods}>
